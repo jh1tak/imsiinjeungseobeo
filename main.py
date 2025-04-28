@@ -1,17 +1,18 @@
-    from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 
-    app = Flask(__name__)
+app = Flask(__name__)
 
-    @app.route('/', methods=['POST'])
-    def verify():
+@app.route('/', methods=['POST'])
+def verify():
+    if request.is_json:
         data = request.get_json()
-        if data and data.get('type') == 'url_verification':
+        if data.get('type') == 'url_verification':
             return jsonify({'challenge': data['challenge']})
-        return '', 404
+    return '', 404
 
-    @app.route('/', methods=['GET'])
-    def health_check():
-        return 'OK', 200
+@app.route('/', methods=['GET'])
+def health_check():
+    return 'OK', 200
 
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=8080)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
